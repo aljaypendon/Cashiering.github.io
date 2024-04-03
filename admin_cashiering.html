@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>admin-Cashiering</title>
+<style>
+    * {
+      font-size: 14px;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f3eb; /* Brown */
+        color: #333; /* Black */
+    }
+    .container {
+        font-size: 14px;
+        max-width: 600px; /* Increased max-width for better display of products */
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fff; /* White */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    form input {
+        margin-bottom: 10px;
+        width: 94%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #693d26; /* Brown */
+    }
+    h1 {
+        text-align: center;
+        color: #693d26; /* Brown */
+    }
+#product-list {
+      
+        z-index: 1;
+    }
+    #product-list li {
+        margin-bottom: 10px;
+        position: relative;
+        background-color: #f7f3eb; /* Brown */
+        padding: 10px;
+        border-radius: 5px;
+    }
+    #product-list li:hover {
+        background-color: #ebdfd5; /* Light Brown */
+    }
+    #product-list button {
+        display: block;
+        margin-top: 5px;
+        width: 100%; /* Make buttons full width */
+    }
+    #search {
+        margin-bottom: 10px;
+        width: 94%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #693d26; /* Brown */
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    .print-btn {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .delete-btn,
+    .update-btn {
+        background-color: #693d26; /* Brown */
+        color: #fff; /* White */
+        border: none;
+        padding: 10px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    .delete-btn:hover,
+    .update-btn:hover {
+        background-color: #542c20; /* Dark Brown */
+    }
+    .quantity-input {
+        width: 50px;
+        margin-left: 10px;
+    }
+    #selected-products {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    #selected-products li {
+    flex: 0 0 calc(50% - 20px); /* Two products per row with 20px margin */
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background-color: #f7f3eb; /* Brown */
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#selected-products li button {
+    display: block; /* Display the buttons as block elements */
+    width: 100%; /* Make buttons full width */
+    margin-top: 10px; /* Add margin to separate buttons vertically */
+    padding: 10px; /* Add padding to buttons */
+    border: none;
+    border-radius: 5px;
+    background-color: #693d26; /* Brown */
+    color: #fff; /* White */
+    cursor: pointer;
+}
+
+#selected-products li button:hover {
+    background-color: #542c20; /* Dark Brown */
+}
+
+
+    #total-price {
+        text-align: right; /* Align total price to the right */
+        font-weight: bold; /* Make total price bold */
+        margin-bottom: 10px;
+    }
+    #payment-form {
+        text-align: left; /* Align payment form to the right */
+    }
+    #payment-form label {
+    font-weight: bold; /* Make the label bold */
+}
+
+    #change {
+        text-align: right; /* Align change to the right */
+        font-weight: bold; /* Make change bold */
+        margin-top: 5!important;px;
+    }
+    @media only screen and (max-width: 600px) {
+        .container {
+            padding: 10px;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        #product-list li {
+            font-size: 14px;
+        }
+        #selected-products li {
+            flex: 0 0 calc(100% - 20px); /* Single product per row on small screens with 20px margin */
+            margin-right: 0;
+        }
+    }
+    
+/* Receipt Section */
+.receipt {
+    border: 2px solid #693d26; /* Brown */
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: #fff; /* White */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.receipt-header h2 {
+    color: #693d26; /* Brown */
+    font-size: 24px; /* Larger font size */
+}
+
+.receipt-details {
+    /* No need to style, inherit from the parent */
+}
+
+.receipt-details div {
+    margin-bottom: 10px; /* Add spacing between items */
+    color: #333; /* Black */
+    font-size: 15px; /* Larger font size */
+}
+
+.receipt-total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 15px; /* Larger font size */
+}
+
+.receipt-total span {
+    color: #693d26; /* Brown */
+}
+
+.receipt .thank-you {
+    text-align: center;
+    margin-top: 20px;
+    color: #693d26; /* Brown */
+    font-size: 12px; /* Larger font size */
+}
+
+#product-list {
+    list-style-type: none;
+    padding: 0;
+    z-index: 1; /* Add z-index to ensure it appears above the sidebar */
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 140px;
+    height: 100%;
+    background-color: #6d4c41; /* Brown background */
+    padding-top: 20px;
+    transition: left 0.3s ease;
+    z-index: 2; /* Ensure the sidebar appears above other content */
+}
+
+
+</style>
+</head>
+<body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation Bar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Include Font Awesome CSS -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .navbar {
+        background-color: #6d4c41; /* Brown background */
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        z-index: 1000;
+        top: 0;
+        position: sticky;
+    }
+
+
+    .navbar-brand {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .menu-icon,
+    .login-icon {
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 140px;
+        height: 100%;
+        background-color: #6d4c41; /* Brown background */
+        padding-top: 20px;
+        transition: left 0.3s ease;
+        margin-top: 30px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+       
+       
+    }
+
+    .sidebar a:hover {
+        background-color: #8d6e63; /* Darker brown on hover */
+    }
+
+    .close-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    /* Style for the welcome message and button */
+    .welcome-container {
+        background-color: #fff;
+        padding: 20px;
+        text-align: center;
+        margin-top: 50px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message {
+        font-size: 24px;
+        color: #6d4c41; /* Brown color */
+        margin-bottom: 20px;
+    }
+
+    .get-started-button {
+        background-color: #6d4c41; /* Brown color */
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .get-started-button:hover {
+        background-color: #5d4037; /* Darker brown color on hover */
+    }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <!-- Menu Icon -->
+    <div class="menu-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i> <!-- Font Awesome Menu Icon -->
+    </div>
+
+    <!-- Navbar Brand -->
+    <a href="#" class="navbar-brand"></a>
+
+    <!-- Login Icon -->
+    <div class="login-icon">
+        <a href="admin-signup.html" style="color: inherit; text-decoration: none;"><i class="fas fa-user"></i></a> <!-- Font Awesome Login Icon with Link -->
+    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <!-- Close Icon -->
+    <a href="#" class="close-icon" onclick="toggleSidebar()">
+        <i class="fas fa-times"></i> <!-- Font Awesome Close Icon -->
+    </a>
+    <a href="admin.html">Home</a>
+    <a href="admin_cashiering.html">admin_cashiering</a>
+    <a href="user-details.html">user-details</a>
+
+    <a href="User-concerns.html">User-concerns</a>
+    <a href="admin-signup.html">Logout/Login</a>
+</div>
+
+
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
+    function redirectToAnotherPage() {
+        // Replace 'anotherpage.html' with the desired URL of the page you want to redirect to
+        window.location.href = 'cashiering.html';
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script> <!-- Include Font Awesome JS -->
+</body>
+</html>
+
+
+
+<div class="container">
+    <h1>Product List</h1>
+    <form id="add-product-form">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" required>
+        <label for="product-price">Product Price:</label>
+        <input type="number" id="product-price" name="product-price" min="0" step="0.01" required>
+        <label for="product-quantity">Quantity:</label>
+        <input type="number" id="product-quantity" name="product-quantity" class="quantity-input" value="1" min="1" required>
+        <button type="submit" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Add Product</button>
+    </form>
+    <input type="text" id="search" placeholder="Search for a product">
+    <ul id="product-list">
+        <!-- Products will be dynamically added here -->
+    </ul>
+<h2>Selected Products:</h2>
+    <ul id="selected-products">
+        <!-- Selected products will be displayed here -->
+    </ul>
+    <div id="total-price"></div>
+    <form id="payment-form">
+        <label for="customer-pay">Customer's Pay:</label>
+        <input type="number" id="customer-pay" name="customer-pay" min="0" step="0.01">
+    </form>
+    
+        <div id="change"></div>
+        
+    <!-- Generate Receipt Button moved here -->
+    <div class="print-btn">
+        <button id="generate-receipt-btn" style="background-color: #693d26; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Generate Receipt</button>
+    </div>
+    
+    <!-- Add Print Receipt Button -->
+<div class="print-btn">
+    <button id="print-receipt-btn" style="background-color: #693d26; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Print Receipt</button>
+</div>
+
+<script>
+    // Add event listener to the Print Receipt button
+    document.getElementById('print-receipt-btn').addEventListener('click', function() {
+        printReceipt();
+    });
+
+    // Function to print the receipt
+    function printReceipt() {
+        // Hide other elements on the page for printing
+        document.querySelector('.container').style.display = 'none';
+
+        // Print the receipt section
+        window.print();
+
+        // Show the container again after printing
+        document.querySelector('.container').style.display = 'block';
+    }
+</script>
+
+    
+<!-- Receipt Section -->
+    <div class="receipt">
+        <div class="receipt-header">
+            <h2>Receipt</h2>
+        </div>
+        <div class="receipt-details">
+            <!-- Receipt details will be dynamically added here -->
+            <style>font-size: 12px;</style>
+        </div>
+        <div class="receipt-total">
+            Total: <span id="receipt-total-amount">₱0.00</span>
+        </div>
+    </div>
+    
+
+
+</div>
+
+<script>
+    const productList = document.getElementById('product-list');
+    const selectedProductsList = document.getElementById('selected-products');
+    const totalPriceDisplay = document.getElementById('total-price');
+    const customerPayInput = document.getElementById('customer-pay');
+    const changeDisplay = document.getElementById('change');
+    let selectedProducts = [];
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const products = JSON.parse(localStorage.getItem('products')) || [];
+        renderProducts(products);
+    });
+
+    function renderProducts(products) {
+        productList.innerHTML = '';
+        products.forEach(product => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="product-name">${product.name}</span> - ₱${product.price.toFixed(2)} <button class="add-to-cart" data-name="${product.name}" data-price="${product.price}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Add to Cart</button> <button class="edit-btn" data-name="${product.name}" data-price="${product.price}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Edit</button> <button class="delete-product-btn" data-name="${product.name}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Delete</button>`;
+            productList.appendChild(li);
+        });
+    }
+
+  productList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('add-to-cart')) {
+        const productName = event.target.getAttribute('data-name');
+        const productPrice = parseFloat(event.target.getAttribute('data-price'));
+        const quantity = 1; // Set the quantity to a default value of 1
+        addToCart(productName, productPrice, quantity);
+    } else if (event.target.classList.contains('edit-btn')) {
+        // Handle editing
+    } else if (event.target.classList.contains('delete-product-btn')) {
+        const productName = event.target.getAttribute('data-name');
+        removeSelectedProduct(productName);
+    }
+});
+
+function addToCart(productName, productPrice, quantity) {
+    const totalPrice = productPrice * quantity;
+    const selectedProduct = { name: productName, price: productPrice, quantity: quantity, totalPrice: totalPrice };
+    selectedProducts.push(selectedProduct);
+    renderSelectedProducts();
+    calculateTotalPrice();
+}
+
+
+    function renderSelectedProducts() {
+        selectedProductsList.innerHTML = '';
+        selectedProducts.forEach(product => {
+            const li = document.createElement('li');
+            li.innerHTML = `${product.name} - ₱${product.totalPrice.toFixed(2)} (${product.quantity} pcs) <button class="delete-selected-product-btn" data-name="${product.name}" style="background-color: #693d26; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>`;
+            selectedProductsList.appendChild(li);
+        });
+    }
+
+    function calculateTotalPrice() {
+        const totalPrice = selectedProducts.reduce((acc, curr) => acc + curr.totalPrice, 0);
+        totalPriceDisplay.textContent = `Total Price: ₱${totalPrice.toFixed(2)}`;
+        updateChange(totalPrice);
+    }
+
+    function updateChange(totalPrice) {
+        const customerPay = parseFloat(customerPayInput.value) || 0;
+        const change = customerPay - totalPrice;
+        changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+    }
+
+    customerPayInput.addEventListener('input', function() {
+        updateChange(parseFloat(totalPriceDisplay.textContent.replace('Total Price: ₱', '')));
+    });
+
+    function removeSelectedProduct(productName) {
+        selectedProducts = selectedProducts.filter(product => product.name !== productName);
+        renderSelectedProducts();
+        calculateTotalPrice();
+    }
+
+    document.getElementById('search').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const productListItems = document.querySelectorAll('#product-list li');
+
+        productListItems.forEach(item => {
+            const productName = item.querySelector('.product-name').innerText.toLowerCase();
+            if (productName.includes(searchValue)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    document.getElementById('add-product-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const productName = document.getElementById('product-name').value.trim();
+        const productPrice = parseFloat(document.getElementById('product-price').value.trim());
+        const quantity = parseInt(document.getElementById('product-quantity').value);
+
+        if (productName && productPrice && quantity) {
+            const product = { name: productName, price: productPrice };
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+            renderProducts(products);
+
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-quantity').value = '1';
+        }
+    });
+
+    function editProduct(oldName, newName, newPrice) {
+        // Handle editing
+    }
+
+    function deleteProduct(name) {
+        // Handle deleting
+    }
+    
+    // Add event listener to the selected products list
+selectedProductsList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-selected-product-btn')) {
+        const productName = event.target.getAttribute('data-name');
+        removeSelectedProduct(productName);
+    }
+});
+
+// Function to remove selected product
+function removeSelectedProduct(productName) {
+    // Filter out the product to remove from selectedProducts array
+    selectedProducts = selectedProducts.filter(product => product.name !== productName);
+    // Render updated selected products
+    renderSelectedProducts();
+    // Recalculate total price
+    calculateTotalPrice();
+}
+
+// Modify renderSelectedProducts() function to include an update button
+function renderSelectedProducts() {
+    selectedProductsList.innerHTML = '';
+    selectedProducts.forEach(product => {
+        const li = document.createElement('li');
+        li.innerHTML = `${product.name} - ₱${product.totalPrice.toFixed(2)} (${product.quantity} pcs) <button class="delete-selected-product-btn" data-name="${product.name}" style="background-color: #693d26; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button> <button class="update-selected-product-btn" data-name="${product.name}" data-quantity="${product.quantity}" style="background-color: #693d26; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Update</button>`;
+        selectedProductsList.appendChild(li);
+    });
+}
+
+// Add event listener to handle click event on update button
+selectedProductsList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('update-selected-product-btn')) {
+        const productName = event.target.getAttribute('data-name');
+        const currentQuantity = parseInt(event.target.getAttribute('data-quantity'));
+        const newQuantity = parseInt(prompt('Enter the new quantity:', currentQuantity));
+        if (!isNaN(newQuantity) && newQuantity > 0) {
+            updateSelectedProductQuantity(productName, newQuantity);
+        } else {
+            alert('Please enter a valid quantity.');
+        }
+    }
+});
+
+// Function to update the quantity of selected product
+function updateSelectedProductQuantity(productName, newQuantity) {
+    selectedProducts.forEach(product => {
+        if (product.name === productName) {
+            product.quantity = newQuantity;
+            product.totalPrice = product.price * newQuantity;
+        }
+    });
+    renderSelectedProducts();
+    calculateTotalPrice();
+}
+
+// Modify renderProducts() function to include edit and delete buttons
+function renderProducts(products) {
+    productList.innerHTML = '';
+    products.forEach(product => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="product-name">${product.name}</span> - ₱${product.price.toFixed(2)} <button class="add-to-cart" data-name="${product.name}" data-price="${product.price}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Add to Cart</button> <button class="edit-product-btn" data-name="${product.name}" data-price="${product.price}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Edit</button> <button class="delete-product-btn" data-name="${product.name}" style="background-color: #693d26; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer;">Delete</button>`;
+        productList.appendChild(li);
+    });
+}
+
+// Add event listener to handle click event on edit and delete buttons
+productList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('edit-product-btn')) {
+        const productName = event.target.getAttribute('data-name');
+        const newProductName = prompt('Enter the new name for the product:', productName);
+        const newProductPrice = parseFloat(prompt('Enter the new price for the product:', parseFloat(event.target.getAttribute('data-price'))));
+        if (newProductName && !isNaN(newProductPrice) && newProductPrice >= 0) {
+            editProduct(productName, newProductName, newProductPrice);
+        } else {
+            alert('Invalid input. Please enter a valid name and price.');
+        }
+    } else if (event.target.classList.contains('delete-product-btn')) {
+        const productName = event.target.getAttribute('data-name');
+        deleteProduct(productName);
+    }
+});
+
+// Function to edit a product
+function editProduct(oldName, newName, newPrice) {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const index = products.findIndex(product => product.name === oldName);
+    if (index !== -1) {
+        products[index].name = newName;
+        products[index].price = newPrice;
+        localStorage.setItem('products', JSON.stringify(products));
+        renderProducts(products);
+    }
+}
+
+// Function to delete a product
+function deleteProduct(name) {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const updatedProducts = products.filter(product => product.name !== name);
+    localStorage.setItem('products', JSON.stringify(updatedProducts));
+    renderProducts(updatedProducts);
+}
+
+
+
+// Add event listener to the generate receipt button
+    document.getElementById('generate-receipt-btn').addEventListener('click', function() {
+        generateReceipt();
+    });
+
+    // Function to generate and display receipt
+    function generateReceipt() {
+        const receiptDetails = document.querySelector('.receipt-details');
+        receiptDetails.innerHTML = ''; // Clear previous details
+        
+        // Iterate over selected products to display on the receipt
+        selectedProducts.forEach(product => {
+            const item = document.createElement('div');
+            item.innerHTML = `${product.name} - ₱${product.totalPrice.toFixed(2)} (${product.quantity} pcs)`;
+            receiptDetails.appendChild(item);
+        });
+
+        // Update total amount on receipt
+        const totalAmount = selectedProducts.reduce((acc, curr) => acc + curr.totalPrice, 0);
+        document.getElementById('receipt-total-amount').textContent = `₱${totalAmount.toFixed(2)}`;
+    }
+    
+    // Add event listener to the Print Receipt button
+    document.getElementById('print-receipt-btn').addEventListener('click', function() {
+        printReceipt();
+    });
+
+    // Function to print the receipt
+    function printReceipt() {
+        // Hide other elements on the page for printing
+        document.querySelector('.container').style.display = 'none';
+
+        // Print the receipt section
+        window.print();
+
+        // Show the container again after printing
+        document.querySelector('.container').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

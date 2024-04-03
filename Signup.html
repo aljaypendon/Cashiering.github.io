@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light gray background */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff; /* White background */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #6d4c41; /* Brown border */
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #6d4c41; /* Brown color */
+            color: #fff; /* White text color */
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5d4037; /* Darker brown color on hover */
+        }
+
+        .form-link {
+            text-align: center;
+            margin-top: 10px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        .form-link span {
+            color: #6d4c41; /* Brown color */
+            cursor: pointer;
+        }
+
+        /* Style for error message */
+        .error-message {
+            color: #ff0000;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Login form -->
+    <div class="form-container" id="loginForm">
+        <form onsubmit="return saveLoginData('login')">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+            <div class="form-link">Don't have an account? <span onclick="switchForm('signupForm')">Signup</span></div>
+            <div id="loginError" class="error-message"></div> <!-- Error message container -->
+        </form>
+    </div>
+      
+    <!-- Signup form -->
+    <div class="form-container" id="signupForm" style="display: none;">
+        <form onsubmit="return saveLoginData('signup')">
+            <label for="signupUsername">Username:</label>
+            <input type="text" id="signupUsername" name="signupUsername" required>
+            <label for="signupPassword">Password:</label>
+            <input type="password" id="signupPassword" name="signupPassword" required>
+            <button type="submit">Signup</button>
+            <div class="form-link">Already have an account? <span onclick="switchForm('loginForm')">Login</span></div>
+        </form>
+    </div>
+
+    <!-- JavaScript code to handle form switching and saving login data -->
+    <script>
+        // Function to switch between login and signup forms
+        function switchForm(formId) {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("signupForm").style.display = "none";
+            document.getElementById(formId).style.display = "block";
+        }
+
+// Function to save login data to local storage
+function saveLoginData(formType) {
+    var username, password;
+    if (formType === 'login') {
+        username = document.getElementById("username").value;
+        password = document.getElementById("password").value;
+        
+
+        // Check if the username and password match what is stored in local storage
+        if (localStorage.getItem(username) === password) {
+            alert('Login successful!');
+            window.location.href = 'Homepage.html'; // Redirect to another page
+            return false; // Prevent form submission after redirect
+        } else {
+            document.getElementById("loginError").innerText = "Incorrect username or password."; // Show error message
+            return false; // Prevent form submission
+        }
+    } else if (formType === 'signup') {
+        username = document.getElementById("signupUsername").value;
+        password = document.getElementById("signupPassword").value;
+
+        // Check if the username already exists in local storage
+        if (localStorage.getItem(username) !== null) {
+            alert('Username already exists. Please choose a different one.');
+            return false; // Prevent form submission
+        }
+
+        // If the username is not already used, save it to local storage
+        localStorage.setItem(username, password);
+        alert('Signup successful! You can now login.');
+        switchForm('loginForm');
+        return false; // Prevent form submission
+    }
+}
+
+
+
+        // Initially display the login form
+        switchForm("loginForm");
+    </script>
+    
+    
+</body>
+</html> 

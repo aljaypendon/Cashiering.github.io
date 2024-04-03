@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light gray background */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6d4c41; /* Brown color */
+        }
+
+        .user-list {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff; /* White background */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-item .username {
+            margin-bottom: 5px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        .user-item .password {
+            color: #888; /* Gray color */
+        }
+
+        .user-item .delete-btn {
+            background-color: #ff3333;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        .user-item .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Registered Users</h1>
+
+<div class="user-list" id="userList">
+    <!-- User list will be displayed here -->
+</div>
+
+<script>
+    // Function to display the list of registered users
+    function displayRegisteredUsers() {
+        var userListDiv = document.getElementById("userList");
+        userListDiv.innerHTML = ""; // Clear previous content
+
+        for (var i = 0; i < localStorage.length; i++) {
+            var username = localStorage.key(i);
+
+            // Exclude specific usernames
+            if (!username.startsWith('eruda')) {
+                var userItem = document.createElement("div");
+                userItem.classList.add("user-item");
+
+                // Create element for username
+                var usernameElement = document.createElement("span");
+                usernameElement.classList.add("username");
+                usernameElement.textContent = "Username: " + username;
+                userItem.appendChild(usernameElement);
+
+                // Create element for password
+                var passwordElement = document.createElement("span");
+                passwordElement.classList.add("password");
+                passwordElement.textContent = "Password: " + localStorage.getItem(username);
+                userItem.appendChild(passwordElement);
+
+                // Create delete button
+                var deleteBtn = document.createElement("button");
+                deleteBtn.classList.add("delete-btn");
+                deleteBtn.innerText = "Delete";
+                deleteBtn.onclick = function() {
+                    // Remove user from local storage and update user list
+                    var clickedUsername = this.parentNode.querySelector(".username").textContent.split(": ")[1];
+                    localStorage.removeItem(clickedUsername);
+                    displayRegisteredUsers();
+                };
+                userItem.appendChild(deleteBtn);
+
+                userListDiv.appendChild(userItem);
+            }
+        }
+    }
+
+    // Display registered users when the page loads
+    displayRegisteredUsers();
+</script>
+
+</body>
+</html>

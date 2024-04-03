@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light gray background */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff; /* White background */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #6d4c41; /* Brown color */
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #6d4c41; /* Brown border */
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #6d4c41; /* Brown color */
+            color: #fff; /* White text color */
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5d4037; /* Darker brown color on hover */
+        }
+
+        .error-message {
+            color: #ff0000;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Login form -->
+    <div class="form-container" id="loginForm">
+        <form onsubmit="return saveLoginData()">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <button type="submit">Login</button>
+            <div id="loginError" class="error-message"></div> <!-- Error message container -->
+        </form>
+    </div>
+
+    <!-- JavaScript code to handle login -->
+    <script>
+        function saveLoginData() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Here you can check the entered username and password against your secret credentials
+            if (username === "aljay" && password === "aljay") {
+                alert('Login successful!');
+                window.location.href = 'admin.html'; // Redirect to admin page
+                return false; // Prevent form submission after redirect
+            } else {
+                document.getElementById("loginError").innerText = "Incorrect username or password.";
+                return false; // Prevent form submission
+            }
+        }
+    </script>
+
+</body>
+</html>

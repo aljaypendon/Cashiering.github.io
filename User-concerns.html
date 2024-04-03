@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Concerns</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        #submitted-concerns {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .concern {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px;
+            background-color: #ff6666;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="submitted-concerns"></div>
+
+<script>
+    // Function to display submitted concerns
+    function displaySubmittedConcerns() {
+        const submittedConcernsDiv = document.getElementById('submitted-concerns');
+
+        // Get the submitted concerns from localStorage
+        const concerns = JSON.parse(localStorage.getItem('submittedConcerns')) || [];
+
+        // Clear previous content
+        submittedConcernsDiv.innerHTML = '';
+
+        // Display each submitted concern
+        concerns.forEach((concern, index) => {
+            const concernDiv = document.createElement('div');
+            concernDiv.classList.add('concern');
+            concernDiv.textContent = `Concern ${index + 1}: ${concern}`;
+
+            // Create delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                deleteConcern(index);
+            });
+
+            // Append delete button to concern div
+            concernDiv.appendChild(deleteButton);
+
+            // Append concern div to submitted concerns container
+            submittedConcernsDiv.appendChild(concernDiv);
+        });
+    }
+
+    // Function to delete a concern
+    function deleteConcern(index) {
+        let concerns = JSON.parse(localStorage.getItem('submittedConcerns')) || [];
+        concerns.splice(index, 1); // Remove concern at given index
+        localStorage.setItem('submittedConcerns', JSON.stringify(concerns));
+        displaySubmittedConcerns(); // Re-display concerns after deletion
+    }
+
+    // Call the function to display submitted concerns when the page loads
+    displaySubmittedConcerns();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homepage</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Include Font Awesome CSS -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #6d4c41; /* Brown background */
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+    }
+
+    .navbar-brand {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .menu-icon,
+    .login-icon {
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 140px;
+        height: 100%;
+        background-color: #6d4c41; /* Brown background */
+        padding-top: 20px;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar a:hover {
+        background-color: #8d6e63; /* Darker brown on hover */
+    }
+
+    .close-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    /* Style for the welcome message and button */
+    .welcome-container {
+        background-color: #fff;
+        padding: 20px;
+        text-align: center;
+        margin-top: 50px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message {
+        font-size: 24px;
+        color: #6d4c41; /* Brown color */
+        margin-bottom: 20px;
+    }
+
+    .get-started-button {
+        background-color: #6d4c41; /* Brown color */
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .get-started-button:hover {
+        background-color: #5d4037; /* Darker brown color on hover */
+    }
+    footer{
+      background-color: #6d4c41;
+      text-align: center;
+      color: white;
+      padding: 1px;
+    }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <!-- Menu Icon -->
+    <div class="menu-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i> <!-- Font Awesome Menu Icon -->
+    </div>
+
+    <!-- Navbar Brand -->
+    
+
+    <!-- Login Icon -->
+    <div class="login-icon">
+        <a href="Signup.html" style="color: inherit; text-decoration: none;"><i class="fas fa-user"></i></a> <!-- Font Awesome Login Icon with Link -->
+    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <!-- Close Icon -->
+    <a href="#" class="close-icon" onclick="toggleSidebar()">
+        <i class="fas fa-times"></i> <!-- Font Awesome Close Icon -->
+    </a>
+    <a href="Homepage.html">Home</a>
+    <a href="About.html">About</a>
+    <a href="tips.html">Tips</a>
+    <a href="forum.html">forum</a>
+    <a href="Signup.html">Logout/Login</a>
+    <a href="Admin.html">Admin</a>
+</div>
+
+<!-- Welcome message and button -->
+<div class="welcome-container">
+    <p class="welcome-message">Welcome to our mini cashiering website</p>
+    <button class="get-started-button" onclick="checkLoginStatus()">Get Started</button>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
+    function redirectToAnotherPage() {
+        // Replace 'anotherpage.html' with the desired URL of the page you want to redirect to
+        window.location.href = 'cashiering.html';
+    }
+
+    function checkLoginStatus() {
+        // Check if the user is logged in
+        // You can implement your own logic here to check if the user is logged in
+        // For example, you can check if there's a session or a cookie indicating the user is logged in
+        
+        var isLoggedIn = true; // Change this to true if the user is logged in
+        
+        if (isLoggedIn) {
+            redirectToAnotherPage(); // If logged in, redirect to another page
+        } else {
+            // If not logged in, prompt the user to log in
+            alert("Please log in to get started.");
+            // You can also redirect the user to the login page using window.location.href if needed
+        }
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script> <!-- Include Font Awesome JS -->
+</body>
+</html>
